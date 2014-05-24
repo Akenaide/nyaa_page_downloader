@@ -1,17 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
+
 __author__ = 'KMS'
-from __future__ import absolute_import
 
 # -----------------------------------------------------------------------------
 #   Imports
 # -----------------------------------------------------------------------------
-import argparse
-import sys
+import click
+import urllib
 from html.parser import HTMLParser
 
 # -----------------------------------------------------------------------------
 #   Globals
 # -----------------------------------------------------------------------------
+
 
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
@@ -23,28 +24,23 @@ class MyHTMLParser(HTMLParser):
                     if attr_name == 'href':
                         print(attr_value)
 
-
-def mk_parser():
-    """ commandline parser """
-    parser = argparse.ArgumentParser(description= "Take a nyaa.se page and download torrents in this page")
-    #parser.add_argument('--verbose', '-v', action='store_true', default=False)
-    parser.add_argument('--no-verify', '-n', action='store_true', default=False)
-    #parser.add_argument('offset', type=int, nargs='?', default=0)
-    return parser
 # -----------------------------------------------------------------------------
 #   Main
 #------------------------------------------------------------------------------
 
+@click.command()
+@click.option('-f', '--file-name', 'lc_file_name', default='nyaa.html', help="give Html file")
+@click.option('-u', '--url', 'lc_url', default=None, help="give url")
+def main(lc_file_name, lc_url):
+    if lc_url is None:
+        with open(lc_file_name, 'r') as f:
+            html_text = "".join(f.readlines())
+    else:
+        request = urllib.request.urlopen(lc_url)
+        html_text = str(request.readlines())
 
-def main():
-    args = sys.argv[1:]
-    parser = mk_parser()
-    options = parser.parse_args(args)
-    fname = "file.htm"
-    with open(fname, 'r', encoding='utf-8') as f:
-        fname_text = "".join(f.readlines())
-    parser = MyHTMLParser()
-    parser.feed(fname_text)
+    html_parser = MyHTMLParser()
+    html_parser.feed(html_text)
 
 if __name__ == "__main__":
     main()
