@@ -6,7 +6,7 @@ __author__ = 'KMS'
 #   Imports
 # -----------------------------------------------------------------------------
 import click
-import urllib
+from  urllib.request import urlopen
 from html.parser import HTMLParser
 
 # -----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ def main(lc_file_name, lc_url):
         with open(lc_file_name, 'r') as f:
             html_text = "".join(f.readlines())
     else:
-        request = urllib.request.urlopen(lc_url)
+        request = urlopen(lc_url)
         html_text = str(request.readlines())
 
     html_parser = MyHTMLParser()
