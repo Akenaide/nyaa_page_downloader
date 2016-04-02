@@ -18,7 +18,7 @@ from html.parser import HTMLParser
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
-      super().__init__(self)
+      super().__init__()
       self.file_link_dict = dict()
 
     def handle_starttag(self, tag, attrs):
