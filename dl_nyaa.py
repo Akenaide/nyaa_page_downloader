@@ -29,7 +29,7 @@ class MyHTMLParser(HTMLParser):
                 for attr_name, attr_value in attrs:
                     if attr_name == 'href':
                         self.file_link_dict["%s.torrent" % str(uuid.uuid4())] = attr_value
-                        print(attr_value)
+                        print("http:" + attr_value)
 
     def get_link_dict(self):
       return self.file_link_dict
