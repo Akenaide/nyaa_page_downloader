@@ -1,15 +1,16 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 __author__ = 'KMS'
 
 # -----------------------------------------------------------------------------
 #   Imports
 # -----------------------------------------------------------------------------
-import click
 import os
-from urllib.request import urlopen, urlretrieve
 import uuid
+from urllib.request import urlopen, urlretrieve
 from html.parser import HTMLParser
+
+import click
 
 # -----------------------------------------------------------------------------
 #   Globals
@@ -25,11 +26,10 @@ class MyHTMLParser(HTMLParser):
         # print("tag %r \n attrs %r" % (tag, attrs))
         title = ('title', 'Download')
         if tag == "a":
-            if title in attrs:
-                for attr_name, attr_value in attrs:
-                    if attr_name == 'href':
-                        self.file_link_dict["%s.torrent" % str(uuid.uuid4())] = attr_value
-                        print("http:" + attr_value)
+            for attr_name, attr_value in attrs:
+                if attr_name == 'href' and attr_value.startswith("magnet"):
+                    self.file_link_dict["%s.torrent" % str(uuid.uuid4())] = attr_value
+                    print(attr_value)
 
     def get_link_dict(self):
       return self.file_link_dict
